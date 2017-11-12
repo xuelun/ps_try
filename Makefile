@@ -1,20 +1,17 @@
 #!/bin/bash
-CPP = g++
-CPP_tag = -std=c++11 -g -O3 -msse3
+CPP=g++
+CPP_tag=-std=c++11 -g -O3 -msse3
 
-INCLUDEPATH = -I./ps-lite/include -I./ps-lite/deps/include
+CUR_DIR=$(shell pwd)
 
-LIBRARY = ./ps-lite/deps/lib/libprotobuf.a ./ps-lite/deps/lib/libprotobuf-lite.a ./ps-lite/deps/lib/libprotoc.a ./ps-lite/build/libps.a 
+INCLUDEPATH=-I${CUR_DIR}/ps_lite/include/ -I${CUR_DIR}/ps_lite/deps/include
+
+LIBRARY=${CUR_DIR}/ps_lite/deps/lib/libprotobuf.a ./ps_lite/deps/lib/libprotobuf-lite.a ./ps_lite/deps/lib/libprotoc.a ./ps_lite/build/libps.a 
 
 all: main
 
-dump: main.o $(LIBRARY)
-	$(CPP) $(CPP_tag) -o $@ $^ $(LIBRARY)
-	rm main.o
-	mv main bin
-
-main.o: src/main.cpp
-	$(CPP) $(CPP_tag) $(INCLUDEPATH) -c src/main.cpp
+main: main.cpp
+	$(CPP) $(CPP_tag) $(INCLUDEPATH) $(LIBRARY) -c main.cpp
 
 clean:
 	rm -f *.o
